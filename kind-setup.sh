@@ -103,12 +103,6 @@ echo "Installing Gateway CRDS and booking VS setup..."
 kubectl get crd gateways.gateway.networking.k8s.io &> /dev/null || \
   { kubectl apply -f https://github.com/kubernetes-sigs/gateway-api/releases/download/v1.1.0/standard-install.yaml; }
 
-# Note: 8080 is defined as the receiving port on this virtual service. 
-# TODO: parameterise the file using the $ISTIO_HTTP_PORT
-
-kubectl apply -f istio/internal-gateway.yaml
-
-kubectl apply -f istio/ingress-bookinfo.yaml
 
 echo "Bookdemo Installed"
 

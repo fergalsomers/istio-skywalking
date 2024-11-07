@@ -13,9 +13,7 @@
 
 cd "$(dirname "$0")"
 
-docker pull alpine
-
-docker build . -t alpine_gettext
+docker pull fergalsomers/alpine-gettext
 
 docker run -v $PWD:/wd \
   -e ISTIO_STATUS_NODE_PORT=$ISTIO_STATUS_NODE_PORT \
@@ -23,8 +21,9 @@ docker run -v $PWD:/wd \
   -e ISTIO_HTTP_NODE_PORT=$ISTIO_HTTP_NODE_PORT \
   -e ISTIO_HTTPS_PORT=$ISTIO_HTTPS_PORT \
   -e ISTIO_HTTP_PORT=$ISTIO_HTTP_PORT \
-  alpine_gettext \
-  sh -c "envsubst < /wd/istio-profile-template.yaml > /wd/istio-profile.yaml"
+  fergalsomers/alpine-gettext \
+  sh -c "envsubst < /wd/istio-profile-template.yaml > /wd/istio-profile.yaml && \
+  envsubst < /wd/istio-ports-cm-template.yaml > /wd/base/resources/overrides/istio-ports-cm.yaml"
 
 docker pull istio/istioctl:1.23.0
 
@@ -34,5 +33,4 @@ docker run -v $PWD/..:/wd \
  istio/istioctl:1.23.0 \
  install -f /wd/istio/istio-profile.yaml -y
 
-kubectl --kubeconfig=$PWD/../kubeconfig apply -f telemetry.yaml
-
+kubectl --kubeconfig=$PWD/../kubeconfig apply -k resources/overrides

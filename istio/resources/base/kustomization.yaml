@@ -11,14 +11,7 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
-FROM alpine:latest
-
-LABEL "maintainer"="fergal somers"
-
-ENV ISTIO_HTTP_NODE_PORT=31590
-ENV ISTIO_HTTPS_NODE_PORT=31591
-ENV ISTIO_STATUS_NODE_PORT=31592
-
-RUN apk update && \
-  apk add --no-cache make gettext
-
+resources:
+- ./telemetry.yaml
+- ./ingress-bookinfo.yaml
+- ./internal-gateway.yaml
